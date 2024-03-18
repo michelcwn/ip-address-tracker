@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-    <script defer src="script.js"></script>
+    <script type="module" defer src="script.js"></script>
     <title>IP Address Tracker</title>
   </head>
   <body>
@@ -45,30 +45,24 @@
       <div class="info">
         <div class="info__block info__block--ip">
           <span class="info__title">IP Address</span>
-          <p class="info__content">191.212.174.101</p>
+          <p class="info__content info__content-ip">191.212.174.101</p>
         </div>
         <div class="info__block info__block--location">
           <span class="info__title">Location</span>
-          <p class="info__content">Brooklyn, NY 10001</p>
+          <p class="info__content info__content-location">Brooklyn, NY 10001</p>
         </div>
         <div class="info__block info__block--timezone">
           <span class="info__title">Timezone</span>
-          <p class="info__content">UTC-05:00</p>
+          <p class="info__content info__content-timezone">UTC-05:00</p>
         </div>
         <div class="info__block info__block--isp">
           <span class="info__title">ISP</span>
-          <p class="info__content">Space X Starlink</p>
+          <p class="info__content info__content-isp">Space X Starlink</p>
         </div>
       </div>
     </header>
     <main class="main">
       <div id="mapid"></div>
-      <script>
-        var map = L.map("mapid").setView([51.505, -0.09], 12);
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution: "© OpenStreetMap contributors",
-        }).addTo(map);
-      </script>
     </main>
   </body>
 </html>

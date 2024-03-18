@@ -1,4 +1,36 @@
 "use strict";
+
+import imagePath from "./images/icon-location.svg";
+
+// DOM ELEMENTS
+const infoIp = document.querySelector(".info__content-ip");
+const infoLocation = document.querySelector(".info__content-location");
+const infoTimezone = document.querySelector(".info__content-timezone");
+const infoIsp = document.querySelector(".info__content-isp");
+const input = document.querySelector(".search__input");
+const submitButton = document.querySelector(".search__button");
+const form = document.querySelector(".search__form");
+// INIT THE MAP OF LEAFLET
+const map = L.map("mapid", {
+  center: [51.505, -0.09],
+  zoom: 12,
+  scrollWheelZoom: "center", // Force le zoom au centre de la carte
+});
+
+map.scrollWheelZoom.enable();
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: "© OpenStreetMap contributors",
+}).addTo(map);
+
+// CUSTOMIZE ICON
+let customIcon = L.icon({
+  iconUrl: imagePath,
+  iconSize: [46, 56],
+  iconAnchor: [19, 47],
+  popupAnchor: [0, -47],
+});
+
 // FETCH IP
 async function getUserIP() {
   try {
@@ -13,8 +45,6 @@ async function getUserIP() {
     console.error("Unable to get user IP:", error);
   }
 }
-
-getUserIP();
 
 // FETCH DATA IP
 const fetchIpData = async (ip) => {
@@ -33,47 +63,29 @@ const fetchIpData = async (ip) => {
     }
 
     const data = await response.json();
-    const timezone = data?.location?.time_zone;
+    const { latitude, longitude, time_zone } = data.location;
+    const { isp } = data.traits;
+    const { en } = data.city.names;
+    const { code } = data.postal;
+    console.log(data);
 
-    return timezone;
+    infoIp.textContent = ip;
+    infoLocation.textContent = `${en}, ${code}`;
+    infoTimezone.textContent = time_zone;
+    infoIsp.textContent = isp;
+
+    // Centrer la carte sur la position récupérée et ajouter un marqueur
+    map.setView([latitude, longitude], 13);
+    L.marker([latitude, longitude], { icon: customIcon })
+      .addTo(map)
+      .bindPopup(
+        "<span style='color: black; font-weight: bold; font-size: 16px'>Votre position approximative.</span>"
+      )
+      .openPopup();
   } catch (error) {
     console.error("Erreur lors de la récupération des informations IP:", error);
   }
 };
-
-fetchIpData();
-
-// async function loadGeojsonData() {
-//   const data = {
-//     type: "Feature",
-//     properties: {
-//       name: "Eiffel Tower",
-//       amenity: "Historic Site",
-//       popupContent: "This is where the Eiffel Tower is located.",
-//     },
-//     geometry: {
-//       type: "Point",
-//       coordinates: [2.294481, 48.85837],
-//     },
-//   };
-//   console.log(data);
-//   try {
-//     L.geoJSON(data, {
-//       onEachFeature: function (feature, layer) {
-//         if (feature.properties && feature.properties.popupContent) {
-//           layer.bindPopup(feature.properties.popupContent);
-//         }
-//       },
-//     }).addTo(map);
-//   } catch (error) {
-//     console.error(
-//       "Erreur lors de l'ajout des données GeoJSON à la carte:",
-//       error
-//     );
-//   }
-// }
-
-// loadGeojsonData();
 
 (async () => {
   const userIp = await getUserIP();
@@ -81,3 +93,15 @@ fetchIpData();
     await fetchIpData(userIp);
   }
 })();
+
+form.addEventListener("click", async function (e) {
+  e.preventDefault();
+  const ip = input.value;
+  infoIp.textContent = ip;
+  console.log(ip);
+  try {
+    await fetchIpData(ip);
+  } catch (error) {
+    console.error("Erreur lors du traitement de l'IP:", error);
+  }
+});
