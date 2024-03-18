@@ -1,7 +1,8 @@
 "use strict";
 
 import imagePath from "./images/icon-location.svg";
-
+console.log("by michelcwn");
+console.log("https://github.com/michelcwn");
 // DOM ELEMENTS
 const infoIp = document.querySelector(".info__content-ip");
 const infoLocation = document.querySelector(".info__content-location");
