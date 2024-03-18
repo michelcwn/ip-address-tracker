@@ -1,6 +1,6 @@
 "use strict";
 
-import imagePath from "./images/icon-location.svg";
+// import imagePath from "./images/icon-location.svg";
 console.log("by michelcwn");
 console.log("https://github.com/michelcwn");
 // DOM ELEMENTS
@@ -25,12 +25,12 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 
 // CUSTOMIZE ICON
-let customIcon = L.icon({
-  iconUrl: imagePath,
-  iconSize: [46, 56],
-  iconAnchor: [19, 47],
-  popupAnchor: [0, -47],
-});
+// let customIcon = L.icon({
+//   iconUrl: imagePath,
+//   iconSize: [46, 56],
+//   iconAnchor: [19, 47],
+//   popupAnchor: [0, -47],
+// });
 
 // FETCH IP
 async function getUserIP() {
@@ -77,7 +77,7 @@ const fetchIpData = async (ip) => {
 
     // Centrer la carte sur la position récupérée et ajouter un marqueur
     map.setView([latitude, longitude], 13);
-    L.marker([latitude, longitude], { icon: customIcon })
+    L.marker([latitude, longitude])
       .addTo(map)
       .bindPopup(
         "<span style='color: black; font-weight: bold; font-size: 16px'>Votre position approximative.</span>"
@@ -95,7 +95,7 @@ const fetchIpData = async (ip) => {
   }
 })();
 
-form.addEventListener("click", async function (e) {
+form.addEventListener("submit", async function (e) {
   e.preventDefault();
   const ip = input.value;
   infoIp.textContent = ip;
